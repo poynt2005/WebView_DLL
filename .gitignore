@@ -1,0 +1,6 @@
+*.lib
+*.exp
+*.dll
+*.exe
+*.o
+test
