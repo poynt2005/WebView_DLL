@@ -115,6 +115,12 @@ extern "C"
   // must destroy the webview.
   WEBVIEW_API void webview_run(webview_t w);
 
+  // Similar to webview_run, but it use peekmessage to process message queue
+  WEBVIEW_API void webview_run1(webview_t w);
+
+  // Set a callback function to be called when the window is destroyed
+  WEBVIEW_API void webview_set_on_destroy(webview_t w, void (*fn)());
+
   // Stops the main loop. It is safe to call this function from another other
   // background thread.
   WEBVIEW_API void webview_terminate(webview_t w);
@@ -2257,6 +2263,10 @@ namespace webview
           }
           else if (msg.message == WM_QUIT)
           {
+            if (on_destroy)
+            {
+              on_destroy();
+            }
             return;
           }
         }
@@ -2281,10 +2291,16 @@ namespace webview
           }
           else if (msg.message == WM_QUIT)
           {
+            if (on_destroy)
+            {
+              on_destroy();
+            }
             return;
           }
         }
       }
+
+      void set_on_destroy(std::function<void()> f) { on_destroy = f; }
       void *window() { return (void *)m_window; }
       void terminate() { PostQuitMessage(0); }
       void dispatch(dispatch_fn_t f)
@@ -2506,6 +2522,8 @@ namespace webview
       ICoreWebView2Controller *m_controller = nullptr;
       webview2_com_handler *m_com_handler = nullptr;
       mswebview2::loader m_webview2_loader;
+
+      std::function<void()> on_destroy;
     };
 
   } // namespace detail
@@ -2656,6 +2674,12 @@ WEBVIEW_API void webview_run(webview_t w)
 WEBVIEW_API void webview_run1(webview_t w)
 {
   static_cast<webview::webview *>(w)->run1();
+}
+
+WEBVIEW_API void webview_set_on_destroy(webview_t w, void (*fn)())
+{
+  static_cast<webview::webview *>(w)->set_on_destroy([&fn]() -> void
+                                                     { fn(); });
 }
 
 WEBVIEW_API void webview_terminate(webview_t w)

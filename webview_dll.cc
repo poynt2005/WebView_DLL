@@ -61,6 +61,12 @@ void RunWebView1(const WebViewHandle handle)
     return webview_run1(webviewInstance);
 }
 
+void SetWebViewOnDestroy(const WebViewHandle handle, void (*fn)())
+{
+    const auto webviewInstance = reinterpret_cast<webview_t>(handle);
+    webview_set_on_destroy(webviewInstance, fn);
+}
+
 void TerminateWebView(const WebViewHandle handle)
 {
     const auto webviewInstance = reinterpret_cast<webview_t>(handle);

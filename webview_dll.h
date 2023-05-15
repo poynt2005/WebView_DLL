@@ -167,6 +167,18 @@ extern "C"
     EXPORTWEBVIEWDLL void RunWebView1(const WebViewHandle handle);
 
     /**
+     * @brief Set the OnDestroy callback
+     *
+     * Set the callback function to be called when webview windows is destroying
+     *
+     * @param handle The handle of the webview instance to set destroy callback function.
+     * @param fn The callback function to be set
+     *
+     * @note The `EXPORTWEBVIEWDLL` attribute indicates that this function is exported from a DLL.
+     */
+    EXPORTWEBVIEWDLL void SetWebViewOnDestroy(const WebViewHandle handle, void (*fn)());
+
+    /**
      * @brief Terminates a WebView instance.
      *
      * This function stops the main loop. It is safe to call this function from another other background thread.
