@@ -172,11 +172,13 @@ extern "C"
      * Set the callback function to be called when webview windows is destroying
      *
      * @param handle The handle of the webview instance to set destroy callback function.
-     * @param fn The callback function to be set
+     * @param fn The callback function to be set,
+     *           The function must take a WebViewHandle ( ex: void fn(handle) ) to identify the caller is hold the right
+     *           handle target to pointer to correct webview instance
      *
      * @note The `EXPORTWEBVIEWDLL` attribute indicates that this function is exported from a DLL.
      */
-    EXPORTWEBVIEWDLL void SetWebViewOnDestroy(const WebViewHandle handle, void (*fn)());
+    EXPORTWEBVIEWDLL void SetWebViewOnDestroy(const WebViewHandle handle, void (*fn)(const WebViewHandle));
 
     /**
      * @brief Terminates a WebView instance.

@@ -119,7 +119,7 @@ extern "C"
   WEBVIEW_API void webview_run1(webview_t w);
 
   // Set a callback function to be called when the window is destroyed
-  WEBVIEW_API void webview_set_on_destroy(webview_t w, void (*fn)());
+  WEBVIEW_API void webview_set_on_destroy(webview_t w, void (*fn)(webview_t _w));
 
   // Stops the main loop. It is safe to call this function from another other
   // background thread.
@@ -2676,10 +2676,10 @@ WEBVIEW_API void webview_run1(webview_t w)
   static_cast<webview::webview *>(w)->run1();
 }
 
-WEBVIEW_API void webview_set_on_destroy(webview_t w, void (*fn)())
+WEBVIEW_API void webview_set_on_destroy(webview_t w, void (*fn)(webview_t _w))
 {
-  static_cast<webview::webview *>(w)->set_on_destroy([&fn]() -> void
-                                                     { fn(); });
+  static_cast<webview::webview *>(w)->set_on_destroy([&]() -> void
+                                                     { fn(w); });
 }
 
 WEBVIEW_API void webview_terminate(webview_t w)

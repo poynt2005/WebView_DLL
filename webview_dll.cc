@@ -13,6 +13,7 @@
 using ContextStore = struct contextStore
 {
     void (*dispatchCallback)(const WebViewHandle, void *) = nullptr;
+    void (*destroyCallback)(const WebViewHandle) = nullptr;
     // void (*bindCallback)(const char *, const char *, void *) = nullptr;
 };
 
@@ -61,10 +62,18 @@ void RunWebView1(const WebViewHandle handle)
     return webview_run1(webviewInstance);
 }
 
-void SetWebViewOnDestroy(const WebViewHandle handle, void (*fn)())
+void SetWebViewOnDestroy(const WebViewHandle handle, void (*fn)(const WebViewHandle))
 {
     const auto webviewInstance = reinterpret_cast<webview_t>(handle);
-    webview_set_on_destroy(webviewInstance, fn);
+
+    auto &contextStore = contextStoreMapping[handle];
+    contextStore->destroyCallback = fn;
+
+    webview_set_on_destroy(webviewInstance, [](webview_t w) -> void
+                           {
+        const auto _handle = reinterpret_cast<WebViewHandle>(w);
+        auto& _contextStore = contextStoreMapping[_handle];
+        (_contextStore->destroyCallback)(_handle); });
 }
 
 void TerminateWebView(const WebViewHandle handle)
