@@ -2274,14 +2274,12 @@ namespace webview
       void run1()
       {
         MSG msg;
-        BOOL res;
-        while ((res = PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) != -1)
+        while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
           if (msg.hwnd)
           {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
-            continue;
           }
           if (msg.message == WM_APP)
           {
