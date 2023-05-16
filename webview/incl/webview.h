@@ -2676,7 +2676,7 @@ WEBVIEW_API void webview_run1(webview_t w)
 
 WEBVIEW_API void webview_set_on_destroy(webview_t w, void (*fn)(webview_t _w))
 {
-  static_cast<webview::webview *>(w)->set_on_destroy([&]() -> void
+  static_cast<webview::webview *>(w)->set_on_destroy([=]() -> void
                                                      { fn(w); });
 }
 
