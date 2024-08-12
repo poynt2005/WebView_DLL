@@ -7,6 +7,11 @@
 #define EXPORTWEBVIEWDLL __declspec(dllimport)
 #endif
 
+#ifdef BUILDSTATIC
+#undef EXPORTWEBVIEWDLL
+#define EXPORTWEBVIEWDLL
+#endif
+
 #define HANDLE_ERROR 0
 
 /**
